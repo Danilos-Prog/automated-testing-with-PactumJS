@@ -57,7 +57,7 @@ it('Integration Testing. Should return all posts and first post should have comm
 // End To End Testing Example
 // *Add Retry Mechanism in demonstration
 // *Add Working API URL
-describe('AddUser_ReadUser', () => {
+describe('End To End Testing Example. Creating User, Getting User and then cleanup', () => {
 
     let test_case = e2e('Add User');
 
