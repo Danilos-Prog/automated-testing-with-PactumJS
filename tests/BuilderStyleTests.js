@@ -1,5 +1,6 @@
 // test.js
 const { spec } = require('pactum');
+const { e2e } = require('pactum');
 
 // Simple test Example
 it('Simple Test. Should get a response with status code 200', async () => {
@@ -21,7 +22,7 @@ it('API Testing. Should get random male users', async () => {
 
 // Integration Testing Example
 it('Integration Testing. Should return all posts and first post should have comments', async () => {
-    
+
     // Method 1. Default
     const response = await spec()
         .get('http://jsonplaceholder.typicode.com/posts')
@@ -48,8 +49,44 @@ it('Integration Testing. Should return all posts and first post should have comm
 
     await spec()
         .get(`http://jsonplaceholder.typicode.com/posts/${postID}/comments`)
-        .expectStatus(200);
+        .expectStatus(200)
+        .retry(2, 2000);
 });
 
 
 // End To End Testing Example
+// *Add Retry Mechanism in demonstration
+// *Add Working API URL
+describe('AddUser_ReadUser', () => {
+
+    let test_case = e2e('Add User');
+
+    it('create user', async () => {
+        await test_case.step('Post User')
+            .spec()
+            .post('/api/users')
+            .withJson({
+                "name": "snow"
+            })
+            .expectStatus(200)
+            .clean()
+            .delete('/api/users/snow')
+            .expectStatus(200);
+    });
+
+    it('get user', async () => {
+        await test_case.step('Get User')
+            .spec()
+            .get('/api/users/snow')
+            .expectStatus(200)
+            .expectJson({
+                "name": "snow"
+            });
+    });
+
+    it('clean up', async () => {
+        // runs all registered cleanup methods in LIFO order
+        await test_case.cleanup();
+    });
+
+});
