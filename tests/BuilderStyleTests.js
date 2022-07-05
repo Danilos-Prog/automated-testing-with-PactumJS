@@ -55,34 +55,50 @@ it('Integration Testing. Should return all posts and first post should have comm
 
 
 // End To End Testing Example
-// *Add Retry Mechanism in demonstration
-// *Add Working API URL
-describe('End To End Testing Example. Creating User, Getting User and then cleanup', () => {
+describe('End To End Testing Example using RESTful CRUD API ToDoListApp. Creating ToDoList and then cleanup', () => {
 
-    let test_case = e2e('Add User');
+    let test_case = e2e('Add ToDo Item');
 
-    it('create user', async () => {
-        await test_case.step('Post User')
+    todoItemBody = {
+        "id": 5,
+        "name": "Get Up!",
+        "isComplete": false
+    };
+
+    updatedTodoItemBody = {
+        "id": 5,
+        "name": "Get Up! Get Up! Get up!",
+        "isComplete": false
+    };
+
+    itemId = updatedTodoItemBody.id;
+
+    it('get ToDo Item', async () => {
+        await test_case.step()
             .spec()
-            .post('/api/users')
-            .withJson({
-                "name": "snow"
-            })
+            .withFollowRedirects(true)
+            .get('http://localhost:7185/todoitems/' + itemId)
             .expectStatus(200)
-            .clean()
-            .delete('/api/users/snow')
-            .expectStatus(200);
+            .expectJson(todoItemBody);
+    })
+
+    it('update ToDo Item', async () => {
+        await test_case.step('Update ToDo Item')
+            .spec()
+            .withFollowRedirects(true)
+            .put('http://localhost:7185/todoitems/' + itemId)
+            .withJson(updatedTodoItemBody)
+            .expectStatus(204);
     });
 
-    it('get user', async () => {
-        await test_case.step('Get User')
+    it('get updated ToDo Item', async () => {
+        await test_case.step()
             .spec()
-            .get('/api/users/snow')
+            .withFollowRedirects(true)
+            .get('http://localhost:7185/todoitems/' + itemId)
             .expectStatus(200)
-            .expectJson({
-                "name": "snow"
-            });
-    });
+            .expectJson(updatedTodoItemBody);
+    })
 
     it('clean up', async () => {
         // runs all registered cleanup methods in LIFO order
@@ -90,3 +106,5 @@ describe('End To End Testing Example. Creating User, Getting User and then clean
     });
 
 });
+
+// Contract Testing: https://pactumjs.github.io/guides/contract-testing.html#compatibility-matrix 
