@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "test": "mocha tests/BuilderStyleTests.js"
+    "BuilderStyleTests": "mocha tests/BuilderStyleTests.js",
+    "BDDStyleTest": "mocha tests/BDDStyleTest.js",
+    "MockServerRun": "node mock-servers/MockServer.js"
   },
   "devDependencies": {
     "mocha": "^10.0.0",

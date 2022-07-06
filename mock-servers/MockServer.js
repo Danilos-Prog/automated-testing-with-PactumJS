@@ -52,7 +52,7 @@ mock.addInteraction({
     method: 'GET',
     path: '/api/projects/{id}',
     pathParams: {
-      id: regex()
+      id: 1
     }
   },
   stores: {
